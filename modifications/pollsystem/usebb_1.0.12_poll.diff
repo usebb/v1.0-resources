@@ -1,0 +1,404 @@
+diff -Naur UseBB12/.htaccess UseBB12_patched/.htaccess
+--- UseBB12/.htaccess	2011-04-13 17:54:48.000000000 +0200
++++ UseBB12_patched/.htaccess	2011-04-15 16:24:31.700429571 +0200
+@@ -27,7 +27,9 @@
+ 	RewriteRule ^topic-([0-9]+)-((un)?subscribe)\.html?[\.,;\-]?$ topic.php?id=$1&act=$2
+ 	RewriteRule ^topic-([0-9]+)-getnewpost\.html?[\.,;\-]?$ topic.php?id=$1&act=getnewpost
+ 	RewriteRule ^topic-post([0-9]+)\.html?[\.,;\-]?$ topic.php?post=$1
+-	RewriteRule ^post-(forum|topic)([0-9]+)\.html?[\.,;\-]?$ post.php?$1=$2
++	#************pizzamampf************
++	RewriteRule ^post-(forum|topic|poll)([0-9]+)\.html?[\.,;\-]?$ post.php?$1=$2
++	#************pizzamampf************
+ 	RewriteRule ^post-topic([0-9]+)-quotepost([0-9]+)\.html?[\.,;\-]?$ post.php?topic=$1&quotepost=$2
+ 	RewriteRule ^edit-post([0-9]+)\.html?[\.,;\-]?$ edit.php?post=$1
+ 	RewriteRule ^edit-post([0-9]+)-delete\.html?[\.,;\-]?$ edit.php?post=$1&act=delete
+diff -Naur UseBB12/languages/lang_English.php UseBB12_patched/languages/lang_English.php
+--- UseBB12/languages/lang_English.php	2011-04-13 17:54:48.000000000 +0200
++++ UseBB12_patched/languages/lang_English.php	2011-04-15 16:24:31.704431755 +0200
+@@ -524,4 +524,16 @@
+ 
+ Otherwise, please reload the original page and revisit the link.';
+ 
++//************pizzamampf************
++$lang['PizzaPollError'] = 'Error while voting...';
++$lang['PizzaPollNotSaved'] = "Your vote is not saved !";
++$lang['PizzaPollVoteAgain'] = "Please vote again !";
++$lang['PizzaPollBackToTopic'] = "Back to topic";
++$lang['PizzaPollNotAnonymous'] = "public";
++$lang['PizzaPollAnonymous'] = "anonymous";
++$lang['PizzaPollChoose'] = "Please choose...";
++$lang['PizzaPollVote'] = "Vote";
++$lang['PizzaPollPoll'] = "Poll";
++//************pizzamampf************
++
+ ?>
+diff -Naur UseBB12/post.php UseBB12_patched/post.php
+--- UseBB12/post.php	2011-04-13 17:54:48.000000000 +0200
++++ UseBB12_patched/post.php	2011-04-15 16:24:31.708428912 +0200
+@@ -54,6 +54,12 @@
+ } elseif ( !empty($_GET['forum']) && valid_int($_GET['forum']) ) {
+ 	
+ 	require(ROOT_PATH.'sources/post_topic.php');
++
++//************pizzamampf************
++} elseif ( !empty($_GET['poll']) && valid_int($_GET['poll']) ) {
++	
++	require(ROOT_PATH.'sources/pizza_post_poll.php');
++//************pizzamampf************
+ 	
+ } else {
+ 	
+diff -Naur UseBB12/sources/functions.php UseBB12_patched/sources/functions.php
+--- UseBB12/sources/functions.php	2011-04-13 17:54:48.000000000 +0200
++++ UseBB12_patched/sources/functions.php	2011-04-15 16:27:39.621429101 +0200
+@@ -1042,7 +1042,9 @@
+ 			return './';
+ 
+ 		$url = $filename;
+-		$keyed = array('forum', 'topic', 'post', 'quotepost', 'al');
++		//************pizzamampf************
++		$keyed = array('forum', 'topic', 'post', 'quotepost', 'al','poll');
++		//************pizzamampf************
+ 
+ 		foreach ( $vars as $key => $val )
+ 			$url .= '-' . urlencode(( in_array($key, $keyed) ) ? $key . $val : $val);
+@@ -2135,7 +2137,10 @@
+ 	 */
+ 	function markup($string, $bbcode=true, $smilies=true, $html=false, $rss_mode=false) {
+ 		
+-		global $db, $template, $lang;
++ 		//************pizzamampf************
++ 		global $db, $template, $lang,$postsdata,$functions,$session;
++ 		//************pizzamampf************
++
+ 		static $random;
+ 		
+ 		$string = preg_replace('#(script|about|applet|activex|chrome):#is', '\\1&#058;', $string);
+@@ -2280,6 +2285,132 @@
+ 			//
+ 			foreach ( $regexps as $find => $replace )
+ 				$string = preg_replace($find, $replace, $string);
++
++			//************pizzamampf************
++				//parse poll
++				$pizza_poll_start=strpos($string,"[poll]");
++				$pizza_poll_ende=strpos($string,"[/poll]");
++				if($pizza_poll_ende>$pizza_poll_start and !strpos($string,"[poll]",($pizza_poll_start+6)) and !strpos($string,"[/poll]",($pizza_poll_ende+7)))
++				{
++					//end of poll must be after beginning of poll, there can only be one poll per post
++					$pizza_poll_inhalt=substr($string,($pizza_poll_start+6),($pizza_poll_ende-$pizza_poll_start-6));
++					if(preg_match("/query:([^\n]*[0-9a-zA-Z]+[^\n]*)\n/",$pizza_poll_inhalt,$pizza_poll_frage)==1)
++					{
++						//querytext exists
++						$pizza_poll_frage=$pizza_poll_frage[1];
++						if(!strcmp(basename($_SERVER["PHP_SELF"]),"topic.php"))
++						{
++							//show poll form on normal topicview
++							if(preg_match_all("/answer([0-9]+):([^\n]*[0-9a-zA-Z]+[^\n]*)\n/",$pizza_poll_inhalt,$pizza_poll_antworten,PREG_SET_ORDER)>0)
++							{
++								//there is at least one answer
++								//build poll-form
++								$pizza_poll_is_open=!strcmp("open",substr($pizza_poll_inhalt,0,4));
++								$pizza_poll_is_multi=preg_match("/^\({0,1}open\){0,1}multi/",$pizza_poll_inhalt);
++								$pizza_poll_is_nochange=preg_match("/^\({0,1}open\){0,1}\({0,1}multi\){0,1}nochange/",$pizza_poll_inhalt);
++								$pizza_poll_formular="<form action=\"".$functions->make_url('post.php', array('poll' => htmlentities($postsdata['id'])))."\" method=\"post\"><b>".htmlentities($pizza_poll_frage)."</b>";
++								if($pizza_poll_is_open)
++									$pizza_poll_formular.=" (".$lang['PizzaPollNotAnonymous'].")";
++								else
++									$pizza_poll_formular.=" (".$lang['PizzaPollAnonymous'].")";
++								if(!$pizza_poll_is_multi)
++								{
++									//start select-list only for non-multi-polls
++									$pizza_poll_formular.="<br /><select name=\"pizza_poll_select\"><option value=\"0\">".$lang['PizzaPollChoose']."</option>";
++								}
++								//get last choosen answer for user
++								$pizza_res=$db->query("select answer from ".TABLE_PREFIX."pizza_polls where memberid=\"".addslashes($session->sess_info['user_id'])."\" and postid=\"".addslashes($postsdata['id'])."\"");
++								if($db->num_rows($pizza_res)>0)
++								{
++									//user has already voted
++									$pizza_row=$db->fetch_result($pizza_res);
++									$pizza_poll_abgestimmt=$pizza_row['answer'];
++								}
++								else
++								{
++									//user has not voted until now
++									$pizza_poll_abgestimmt=0;	
++								}
++								reset($pizza_poll_antworten);
++								if($pizza_poll_is_multi)
++								{
++									//add checkboxes for multi poll
++									$pizza_poll_formular.="<br />";
++									while($pizza_poll_aktantwort=each($pizza_poll_antworten))
++									{
++										$pizza_poll_formular.="<input type=\"checkbox\" value=\"".htmlentities($pizza_poll_aktantwort[1][1])."\" name=\"pizza_poll_check_".htmlentities($pizza_poll_aktantwort[1][1])."\"";
++										if($pizza_poll_abgestimmt & pow(2,$pizza_poll_aktantwort[1][1])) $pizza_poll_formular.=" checked=\"checked\"";
++										$pizza_poll_formular.=" /> ".htmlentities($pizza_poll_aktantwort[1][2])."<br />";
++									}									
++								}
++								else
++								{
++									//build select-list for non-multi polls
++									while($pizza_poll_aktantwort=each($pizza_poll_antworten))
++									{
++										$pizza_poll_formular.="<option value=\"".htmlentities($pizza_poll_aktantwort[1][1])."\"";
++										if($pizza_poll_abgestimmt==$pizza_poll_aktantwort[1][1]) $pizza_poll_formular.=" selected=\"selected\"";
++										$pizza_poll_formular.=">".htmlentities($pizza_poll_aktantwort[1][2])."</option>";
++									}
++									$pizza_poll_formular.="</select>";
++								}
++								//set hidden-field for open- or closed-poll
++								if($pizza_poll_is_open)
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_open\" value=\"1\" />";
++								else
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_open\" value=\"0\" />";
++								//set hidden-field for multi-poll
++								if($pizza_poll_is_multi)
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_multi\" value=\"1\" />";
++								else
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_multi\" value=\"0\" />";
++								//set hidden-field for multi-poll
++								if($pizza_poll_is_nochange)
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_nochange\" value=\"1\" />";
++								else
++									$pizza_poll_formular.="<input type=\"hidden\" name=\"pizza_poll_nochange\" value=\"0\" />";
++
++								//don't show submit-button on nochange-polls if user has already voted
++								if($pizza_poll_abgestimmt==0 or !$pizza_poll_is_nochange) $pizza_poll_formular.="<input type=\"submit\" value=\"".$lang['PizzaPollVote']."\" />";
++								
++								//close form
++								$pizza_poll_formular.="</form>";
++
++								//show current poll-results
++								reset($pizza_poll_antworten);
++								while($pizza_poll_aktantwort=each($pizza_poll_antworten))
++								{
++									//get result for actual answer from database and show it
++									if($pizza_poll_is_multi)
++										$pizza_whereclause="(p.answer & pow(2,\"".addslashes($pizza_poll_aktantwort[1][1])."\"))"; //multiple answers are possible in this poll
++									else
++										$pizza_whereclause="p.answer=\"".addslashes($pizza_poll_aktantwort[1][1])."\""; //only one answer ist possible in this poll
++
++									$pizza_res=$db->query("select count(*) as count from ".TABLE_PREFIX."pizza_polls as p where ".$pizza_whereclause." and postid=\"".addslashes($postsdata['id'])."\"");
++									$pizza_row=$db->fetch_result($pizza_res);
++									$pizza_poll_formular.="<br />".htmlentities($pizza_poll_aktantwort[1][2]).": ".htmlentities($pizza_row["count"]);
++									if($pizza_poll_is_open)
++									{
++										//show membernames for open-polls (member must have voted in open-poll, changing a closed poll to open poll will not reveal old votes)
++										$pizza_res=$db->query("select m.displayed_name from ".TABLE_PREFIX."pizza_polls as p inner join ".TABLE_PREFIX."members as m on p.memberid=m.id where ".$pizza_whereclause." and p.postid=\"".addslashes($postsdata['id'])."\" and p.open=\"1\"");
++										while($pizza_row=$db->fetch_result($pizza_res))
++										{
++											$pizza_poll_formular.="<br />".str_repeat("&nbsp;",5)."- ".htmlentities($pizza_row["displayed_name"]);
++										}											
++									}
++								}
++								//replace poll-tags with poll-form in post
++								$string=preg_replace("#\[poll\][^\[]+\[/poll\]#",$pizza_poll_formular,$string);
++							}
++						}
++						else
++						{
++							//in other views only show the query
++							$string=preg_replace("#\[poll\][^\[]+\[/poll\]#",$pizza_poll_frage."[...]",$string);
++						}
++					}
++				}
++			//************pizzamampf************
+ 			
+ 			//
+ 			// Remove tags from attributes
+@@ -2321,7 +2452,7 @@
+ 	function get_bbcode_controls() {
+ 		
+ 		global $lang, $template;
+-		
++		//************pizzamampf************
+ 		$controls = array(
+ 			array('[b]', '[/b]', 'B', 'font-weight: bold'),
+ 			array('[i]', '[/i]', 'I', 'font-style: italic'),
+@@ -2332,9 +2463,10 @@
+ 			array('[img]', '[/img]', $lang['Img'], ''),
+ 			array('[url=http://www.example.com]', '[/url]', $lang['URL'], ''),
+ 			array('[color=red]', '[/color]', $lang['Color'], ''),
+-			array('[size=14]', '[/size]', $lang['Size'], '')
++			array('[size=14]', '[/size]', $lang['Size'], ''),
++			array('[poll](open)(multi)(nochange)query:\nanswer1:\nanswer2:\nanswer3:\n', '[/poll]', $lang['PizzaPollPoll'], '')
+ 		);
+-		
++		//************pizzamampf************
+ 		$out = array();
+ 		foreach ( $controls as $data )
+ 			$out[] = '<a href="javascript:void(0);" onclick="insert_tags(\''.$data[0].'\', \''.$data[1].'\')" style="'.$data[3].'">'.$data[2].'</a>';
+diff -Naur UseBB12/sources/pizza_post_poll.php UseBB12_patched/sources/pizza_post_poll.php
+--- UseBB12/sources/pizza_post_poll.php	1970-01-01 01:00:00.000000000 +0100
++++ UseBB12_patched/sources/pizza_post_poll.php	2011-04-15 16:24:31.732431474 +0200
+@@ -0,0 +1,169 @@
++<?php
++
++/*
++	Copyright (C) 2006 Pizzamampf
++	http://www.pizzamampf.de
++*/
++
++/**
++ * Post Poll
++ *
++ * Puts Poll-Vote to Database
++ */
++
++//
++// Die when called directly in browser
++//
++if ( !defined('INCLUDED') )
++	exit();
++
++//************pizzamampf************
++//get Topic-ID based on Post-ID
++$pizza_res=$db->query("SELECT topic_id from ".TABLE_PREFIX."posts where id=\"".addslashes($_GET["poll"])."\"");
++if($pizza_row=$db->fetch_result($pizza_res))
++{
++	$_GET['topic']=$pizza_row['topic_id'];
++}
++else
++{
++	//es existiert kein Topic zu der Anfrage
++	$_GET['topic']=0;	
++}
++//************pizzamampf************
++
++//
++// Update and get the session information
++//
++$session->update();
++
++//
++// Include the page header
++//
++require(ROOT_PATH.'sources/page_head.php');
++
++$result = $db->query("SELECT t.id, t.topic_title, t.status_locked, t.forum_id, t.count_replies, f.id AS forum_id, f.name AS forum_name, f.status AS forum_status, f.auth, f.auto_lock, f.increase_post_count FROM ".TABLE_PREFIX."topics t, ".TABLE_PREFIX."forums f WHERE t.id = ".$_GET['topic']." AND f.id = t.forum_id");
++$topicdata = $db->fetch_result($result);
++
++if ( !$topicdata['id'] ) {
++	
++	//
++	// This topic does not exist, show an error
++	//
++	header(HEADER_404);
++	$template->set_page_title($lang['Error']);
++	$template->parse('msgbox', 'global', array(
++		'box_title' => $lang['Error'],
++		'content' => sprintf($lang['NoSuchTopic'], 'ID '.$_GET['topic'])
++	));
++	
++} else {
++	
++	if ( $topicdata['status_locked'] && !$functions->auth($topicdata['auth'], 'lock', $topicdata['forum_id']) ) {
++		
++		$template->set_page_title($lang['TopicIsLocked']);
++		$template->parse('msgbox', 'global', array(
++			'box_title' => $lang['TopicIsLocked'],
++			'content' => $lang['TopicIsLockedExplain']
++		));
++		
++	} elseif ( !$topicdata['forum_status'] && $functions->get_user_level() != LEVEL_ADMIN ) {
++		
++		$template->set_page_title($lang['ForumIsLocked']);
++		$template->parse('msgbox', 'global', array(
++			'box_title' => $lang['ForumIsLocked'],
++			'content' => $lang['ForumIsLockedExplain']
++		));
++		
++	} elseif ( $functions->auth($topicdata['auth'], 'reply', $topicdata['forum_id']) ) {
++//************pizzamampf************	
++			if((isset($_POST["pizza_poll_select"]) or isset($_POST["pizza_poll_multi"])) and isset($_POST["pizza_poll_open"]) and isset($_POST["pizza_poll_nochange"]))
++			{
++				//check if post-vars match the poll-definition
++				//poll-start
++				$pizza_poll_def="/\[poll\]";
++				//open-parameter
++				if($_POST["pizza_poll_open"]==1) $pizza_poll_def.="open";
++				else  $pizza_poll_def.="\(open\)";
++				//multi-parameter
++				if($_POST["pizza_poll_multi"]==1) $pizza_poll_def.="multi";
++				else  $pizza_poll_def.="\(multi\)";
++				//nochange-parameter (may be missing in old polls)
++				if($_POST["pizza_poll_nochange"]==1) $pizza_poll_def.="nochange";
++				else  $pizza_poll_def.="(\(nochange\)|)";
++				//query
++				$pizza_poll_def.="query:/";
++				$pizza_res=$db->query("select content from ".TABLE_PREFIX."posts where id=\"".addslashes($_GET["poll"])."\"");
++				if($pizza_row=$db->fetch_result($pizza_res))
++				{
++					if(preg_match($pizza_poll_def,$pizza_row["content"])) $pizza_post_match_poll=true;
++					else $pizza_post_match_poll=false;
++				}
++				else $pizza_post_match_poll=false;
++			}
++			else $pizza_post_match_poll=false;
++			
++			if($pizza_post_match_poll)
++			{
++				//important form-variables are set and form-definition matches post-vars
++				if($_POST["pizza_poll_multi"]==1)
++				{
++					//calculate answer-value from selected answers
++					$pizza_poll_given_answer=0;
++					reset($_POST);
++					while($pizza_akt_array=each($_POST))
++						if(preg_match("/^pizza_poll_check_[0-9]+/",$pizza_akt_array[0]) and $pizza_akt_array[1]>0) $pizza_poll_given_answer+=pow(2,$pizza_akt_array[1]);
++				}
++				else
++				{
++					//get id of selected answer on non-multi poll
++					$pizza_poll_given_answer=$_POST["pizza_poll_select"];
++				}
++				//Put poll-result into database or change all values
++				$pizza_res=$db->query("select id from ".TABLE_PREFIX."pizza_polls where postid=\"".addslashes($_GET["poll"])."\" and memberid=\"".addslashes($session->sess_info['user_id'])."\"");
++				if($db->num_rows($pizza_res)>0)
++				{
++					//change existing entry
++					//only change the answer if it's not a nochange-poll
++					if($_POST["pizza_poll_nochange"]==0)
++					{
++						$pizza_row=$db->fetch_result($pizza_res);
++						$db->query("update ".TABLE_PREFIX."pizza_polls set answer=\"".addslashes($pizza_poll_given_answer)."\",open=\"".addslashes($_POST["pizza_poll_open"])."\" where id=\"".addslashes($pizza_row["id"])."\"");
++					}	
++				}
++				else
++				{
++					//create new entry
++					$db->query("insert into ".TABLE_PREFIX."pizza_polls set postid=\"".addslashes($_GET["poll"])."\",memberid=\"".addslashes($session->sess_info['user_id'])."\",answer=\"".addslashes($pizza_poll_given_answer)."\",open=\"".addslashes($_POST["pizza_poll_open"])."\"");
++				}
++				if ( $functions->get_config('return_to_topic_after_posting') )
++					$functions->redirect('topic.php', array('post' => htmlentities($_GET["poll"])), 'post'.htmlentities($_GET["poll"]));
++				else
++					$functions->redirect('forum.php', array('id' => $topicdata['forum_id']));
++			}
++			else
++			{
++				//no vote is submitted (for example if interrupted by loginrequest)
++				$template->set_page_title($lang['PizzaPollError']);
++				$template->parse('msgbox', 'global', array(
++					'box_title' => $lang['PizzaPollNotSaved'],
++					'content' => $lang['PizzaPollVoteAgain']."<br /><a href=\"topic.php?post=".htmlentities($_GET["poll"])."#post".htmlentities($_GET["poll"])."\">--&gt; ".$lang['PizzaPollBackToTopic']." &lt;--</a>"
++				));
++			}
++//************pizzamampf************
++	} else {
++		
++		//
++		// The user is not granted to post replies in this forum
++		//
++		$functions->redir_to_login();
++		
++	}
++	
++}
++
++//
++// Include the page footer
++//
++require(ROOT_PATH.'sources/page_foot.php');
++
++?>
