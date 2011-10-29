@@ -1,7 +1,7 @@
 mymessenger
 ===========
 
-An private message system for 0.2.
+A private message system for 0.2.
 
 **Note:** this mod was made for UseBB 0.2. Today, it is not only unusable but redundant as well, leaving nothing more than a curiosity.
 
@@ -41,5 +41,5 @@ members.
 - Choose to screw them all and disable PM's altogether.
 </pre>
 
-* Date: 2004-07-19 00:09:54 UTC
+* Date: 2004-07-19
 * Author: [wehnerj](http://sourceforge.net/users/wehnerj/)

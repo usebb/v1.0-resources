@@ -52,5 +52,5 @@ thread on the UseBB Community Forums, or email me at
 jwehner AT wehnerweb.com.
 </pre>
 
-* Date: 2004-05-02 18:18:48 UTC
+* Date: 2004-05-02
 * Author: [wehnerj](http://sourceforge.net/users/wehnerj/)
