@@ -28,6 +28,13 @@ This ACP feature can export banned IP addresses in a given plain text format. E.
 
 Next to this, all currently banned IP addresses can be removed in one step.
 
+members.php
+-----------
+
+Allows editing of a members profile via the ACP. Also post count, rank, etc.
+
+* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
+
 merge_topics.php
 ----------------
 
