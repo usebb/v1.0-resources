@@ -1,0 +1,778 @@
+diff -udPr UseBB/.htaccess usercatmod/.htaccess
+--- UseBB/.htaccess	2006-07-26 18:23:20.000000000 +0200
++++ usercatmod/.htaccess	2007-01-07 14:11:39.890625000 +0100
+@@ -16,7 +16,7 @@
+ 	
+ 	RewriteRule ^(index|panel|faq|search|active|online|members|rss|stats)\.html?[\.,;\-]?$ $1.php
+ 	RewriteRule ^index-([0-9]+)\.html?[\.,;\-]?$ index.php?cat=$1
+-	RewriteRule ^panel-(login|logout|register|sendpwd|editprofile|editoptions|editpwd|subscriptions)\.html?[\.,;\-]?$ panel.php?act=$1
++	RewriteRule ^panel-(login|logout|register|sendpwd|editprofile|editoptions|editpwd|subscriptions|usergroups)\.html?[\.,;\-]?$ panel.php?act=$1
+ 	RewriteRule ^panel-al(0|1)\.html?[\.,;\-]?$ panel.php?al=$1
+ 	RewriteRule ^panel-activate-([0-9]+)-([0-9a-zA-Z]+)\.html?[\.,;\-]?$ panel.php?act=activate&id=$1&key=$2
+ 	RewriteRule ^panel-markallasread\.html?[\.,;\-]?$ panel.php?do=markallasread
+diff -udPr UseBB/languages/admin_English.php usercatmod/languages/admin_English.php
+--- UseBB/languages/admin_English.php	2007-01-01 12:58:44.000000000 +0100
++++ usercatmod/languages/admin_English.php	2007-01-07 19:41:10.000000000 +0100
+@@ -452,4 +452,27 @@
+ $lang['BansNoBansExist'] = 'No bans of this type exist at this forum.';
+ $lang['BansIPBansDisabledInfo'] = 'IP address banning has been disabled in the board configuration.';
+ 
++// Usergroups extention
++$lang['ForumsUsergroupSettings'] = 'Usergroup Settings';
++$lang['ForumsUsergroupReadSetting'] = 'Read rights to forum';
++$lang['ForumsUsergroupWriteSetting'] = 'Write rights to forum';
++$lang['ForumsUsergroupEveryone'] = 'Everyone';
++$lang['Category-usergroups'] = 'Usergroups';
++$lang['Item-usergroups'] = 'Usergroups';
++$lang['Item-update_groups'] = 'Update user group';
++$lang['UsergroupsInfo'] = 'This section allows you to manage usergroups used at the board';
++$lang['UsergroupsAddNewUsergroup'] = 'Add Usergroup';
++$lang['UsergroupsNoUsergroupsExist'] = 'There are no usergroups found!';
++$lang['UsergroupsGroupName'] = 'Usergroup name';
++$lang['UsergroupsConfirmUsergroupDelete'] = 'Confirm removal of usergroup';
++$lang['UsergroupsConfirmUsergroupContent'] = 'Are you sure that you want to remove usergroup %s? There is no way of going back there!';
++$lang['UsergroupsEditingUsergroup'] = 'Modify usergroup %s';
++$lang['UsergroupsAddNewUsergroup'] = 'Add new usergroup';
++$lang['UsergroupsGeneral'] = 'Usergroup General';
++$lang['UsergroupsUsergroupName'] = 'Name';
++$lang['UsergroupsUsergroupDescr'] = 'Description';
++$lang['UpdateGroupsInfo'] = 'This section allows you to add or remove group rights from the selected user.';
++$lang['UpdateGroupsAddGroupToUser'] = 'Add usergroup to user';
++$lang['UpdateGroupsAddUserToGroupInfo'] = 'Select one of the usergroups to add to the selected user.';
++$lang['UsergroupsAddUserToGroupCaption'] = 'Select usergroup';
+ ?>
+diff -udPr UseBB/languages/admin_Nederlands.php usercatmod/languages/admin_Nederlands.php
+--- UseBB/languages/admin_Nederlands.php	2007-01-01 12:58:44.000000000 +0100
++++ usercatmod/languages/admin_Nederlands.php	2007-01-07 19:38:34.468750000 +0100
+@@ -452,4 +452,27 @@
+ $lang['BansNoBansExist'] = 'Geen bans van dit type bestaan reeds op dit forum.';
+ $lang['BansIPBansDisabledInfo'] = 'IP-adresbans zijn uitgeschakeld in de forumconfiguratie.';
+ 
++// Usergroups extention
++$lang['ForumsUsergroupSettings'] = 'Gebruikersgroep-instellingen';
++$lang['ForumsUsergroupReadSetting'] = 'Leesrechten op forum';
++$lang['ForumsUsergroupWriteSetting'] = 'Schrijfrechten op forum';
++$lang['ForumsUsergroupEveryone'] = 'Iedereen';
++$lang['Category-usergroups'] = 'Gebruikersgroepen';
++$lang['Item-usergroups'] = 'Gebruikersgroepen';
++$lang['Item-update_groups'] = 'Wijzig gebruikers groepen';
++$lang['UsergroupsInfo'] = 'Deze sectie geeft je controle over de gebruikersgroepen van je forum';
++$lang['UsergroupsAddNewUsergroup'] = 'Gebruikersgroep Toevoegen';
++$lang['UsergroupsNoUsergroupsExist'] = 'Er zijn geen gebruikersgroepen gevonden!';
++$lang['UsergroupsGroupName'] = 'Gebruikersgroep naam';
++$lang['UsergroupsConfirmUsergroupDelete'] = 'Bevestigen van het verwijderen van gebruikersgroep';
++$lang['UsergroupsConfirmUsergroupContent'] = 'Weet je zeker dat je gebruikersgroep %s wilt verwijderen? Deze actie is onomkeerbaar!';
++$lang['UsergroupsEditingUsergroup'] = 'Bewerk gebruikersgroep %s';
++$lang['UsergroupsAddNewUsergroup'] = 'Voeg nieuwe gebruikersgroep toe';
++$lang['UsergroupsGeneral'] = 'Gebruikersgroepen Algemeen';
++$lang['UsergroupsUsergroupName'] = 'Naam';
++$lang['UsergroupsUsergroupDescr'] = 'Beschrijving';
++$lang['UpdateGroupsInfo'] = 'Deze sectie geeft je controle over de gebruikersgroepen van de geselcteerde gebruiker.';
++$lang['UpdateGroupsAddGroupToUser'] = 'Voeg een gebruikersgroep toe aan deze gebruiker';
++$lang['UpdateGroupsAddUserToGroupInfo'] = 'Selecteer een gebruikersgroep om toe te voegen aan de geselecteerde gebruiker.';
++$lang['UsergroupsAddUserToGroupCaption'] = 'Gebruikersgroep selecteren';
+ ?>
+diff -udPr UseBB/languages/lang_English.php usercatmod/languages/lang_English.php
+--- UseBB/languages/lang_English.php	2007-01-01 12:58:44.000000000 +0100
++++ usercatmod/languages/lang_English.php	2007-01-08 23:20:43.875000000 +0100
+@@ -497,4 +497,7 @@
+ $lang['Bottom'] = 'Bottom';
+ $lang['Action'] = 'Action';
+ 
++$lang['Usergroups'] = 'Usergroups';
++$lang['UsergroupsPanelCaption'] = 'The table below shows the usergroups you are a member of.';
++$lang['UsergroupsPanelNoUsergroups'] = 'You are not subscribed to a usergroup!';
+ ?>
+diff -udPr UseBB/languages/lang_Nederlands.php usercatmod/languages/lang_Nederlands.php
+--- UseBB/languages/lang_Nederlands.php	2007-01-01 12:58:44.000000000 +0100
++++ usercatmod/languages/lang_Nederlands.php	2007-01-08 23:20:34.671875000 +0100
+@@ -546,4 +546,7 @@
+ 	'th' => 'de'
+ );
+ 
++$lang['Usergroups'] = 'Gebruikersgroepen';
++$lang['UsergroupsPanelCaption'] = 'De onderstaande tabel geeft weer van welke gebruikersgroepen je lid bent:';
++$lang['UsergroupsPanelNoUsergroups'] = 'Je ben niet ingeschreven in een gebruikersgroep!';
+ ?>
+diff -udPr UseBB/panel.php usercatmod/panel.php
+--- UseBB/panel.php	2007-01-01 12:58:40.000000000 +0100
++++ usercatmod/panel.php	2007-01-05 20:30:10.718750000 +0100
+@@ -82,7 +82,7 @@
+ 	//
+ 	require(ROOT_PATH.'sources/panel_sendpwd.php');
+ 	
+-} elseif ( in_array($_GET['act'], array('panel_home', 'editprofile', 'editoptions', 'editpwd', 'subscriptions')) ) {
++} elseif ( in_array($_GET['act'], array('panel_home', 'editprofile', 'editoptions', 'editpwd', 'subscriptions', 'usergroups')) ) {
+ 	
+ 	//
+ 	// Update and get the session information
+@@ -102,6 +102,9 @@
+ 		
+ 		switch ( $_GET['act'] ) {
+ 			
++			case 'usergroups':
++				$location = $lang['Usergroups'];
++				break;
+ 			case 'subscriptions':
+ 				$location = $lang['Subscriptions'];
+ 				break;
+@@ -124,6 +127,7 @@
+ 		
+ 		$template->parse('menu', 'panel', array(
+ 			'panel_home' => '<a href="'.$functions->make_url('panel.php').'">' . ( ( $_GET['act'] != 'panel_home' ) ? $lang['PanelHome'] : '<strong>'.$lang['PanelHome'].'</strong>' ) . '</a>',
++			'panel_usergroups' => '<a href="'.$functions->make_url('panel.php', array('act' => 'usergroups')).'">' . ( ( $_GET['act'] != 'usergroups' ) ? $lang['Usergroups'] : '<strong>'.$lang['Usergroups'].'</strong>' ) . '</a>',
+ 			'panel_subscriptions' => '<a href="'.$functions->make_url('panel.php', array('act' => 'subscriptions')).'">' . ( ( $_GET['act'] != 'subscriptions' ) ? $lang['Subscriptions'] : '<strong>'.$lang['Subscriptions'].'</strong>' ) . '</a>',
+ 			'view_profile' => '<a href="'.$functions->make_url('profile.php', array('id' => $session->sess_info['user_info']['id'])).'">'.$lang['ViewProfile'].'</a>',
+ 			'panel_profile' => '<a href="'.$functions->make_url('panel.php', array('act' => 'editprofile')).'">' . ( ( $_GET['act'] != 'editprofile' ) ? $lang['EditProfile'] : '<strong>'.$lang['EditProfile'].'</strong>' ) . '</a>',
+@@ -148,6 +152,9 @@
+ 			case 'subscriptions':
+ 				require(ROOT_PATH.'sources/panel_subscriptions.php');
+ 				break;
++			case 'usergroups':
++				require(ROOT_PATH.'sources/panel_usergroups.php');
++				break;
+ 			
+ 		}
+ 		
+diff -udPr UseBB/sources/admin_forums.php usercatmod/sources/admin_forums.php
+--- UseBB/sources/admin_forums.php	2007-01-01 12:58:46.000000000 +0100
++++ usercatmod/sources/admin_forums.php	2007-01-05 22:58:42.203125000 +0100
+@@ -271,6 +271,8 @@
+ 			$_POST['status'] = ( !empty($_POST['status']) ) ? 1 : 0;
+ 			$_POST['increase_post_count'] = ( !empty($_POST['increase_post_count']) ) ? 1 : 0;
+ 			$_POST['hide_mods_list'] = ( !empty($_POST['hide_mods_list']) ) ? 1 : 0;
++			$_POST['readaccess'] = ( !empty($_POST['readaccess']) ) ? $_POST['readaccess'] : '-1';
++			$_POST['writeaccess'] = ( !empty($_POST['writeaccess']) ) ? $_POST['writeaccess'] : '-1';
+ 			
+ 			if ( $_GET['do'] == 'edit' ) {
+ 				
+@@ -286,7 +288,9 @@
+ 					auth = '".$_POST['auth']."',
+ 					auto_lock = ".$_POST['auto_lock'].",
+ 					increase_post_count = ".$_POST['increase_post_count'].",
+-					hide_mods_list = ".$_POST['hide_mods_list']."
++					hide_mods_list = ".$_POST['hide_mods_list'].",
++					readaccess = ".$_POST['readaccess'].",
++					writeaccess = ".$_POST['writeaccess']."
+ 				WHERE id = ".$_GET['id']);
+ 				
+ 				//
+@@ -300,7 +304,7 @@
+ 				foreach ( range(0, 9) as $authid )
+ 					$_POST['auth'] .= ( !empty($_POST['auth'.$authid]) && valid_int($_POST['auth'.$authid]) && in_array($_POST['auth'.$authid], $user_levels) ) ? $_POST['auth'.$authid] : $default_auth[$authid];
+ 				
+-				$db->query("INSERT INTO ".TABLE_PREFIX."forums VALUES(NULL, '".$_POST['name']."', '".$_POST['cat_id']."', '".$_POST['descr']."', ".$_POST['status'].", 0, 0, 0, 0, '".$_POST['auth']."', ".$_POST['auto_lock'].", ".$_POST['increase_post_count'].", ".$_POST['hide_mods_list'].")");
++				$db->query("INSERT INTO ".TABLE_PREFIX."forums VALUES(NULL, '".$_POST['name']."', '".$_POST['cat_id']."', '".$_POST['descr']."', ".$_POST['status'].", 0, 0, 0, 0, '".$_POST['auth']."', ".$_POST['auto_lock'].", ".$_POST['increase_post_count'].", ".$_POST['hide_mods_list'].", ".$_POST['readaccess'].", ".$_POST['writeaccess'].")");
+ 				
+ 			}
+ 			
+@@ -353,7 +357,7 @@
+ 				
+ 			} else {
+ 				
+-				$fields = array('name', 'cat_id', 'descr', 'status', 'auto_lock', 'increase_post_count', 'hide_mods_list');
++				$fields = array('name', 'cat_id', 'descr', 'status', 'auto_lock', 'increase_post_count', 'hide_mods_list', 'readaccess', 'writeaccess');
+ 				foreach ( range(0, 9) as $authid )
+ 					$fields[] = 'auth'.$authid;
+ 				
+@@ -400,6 +404,39 @@
+ 				$content .= '<tr><td class="fieldtitle">'.$lang['ForumsIncreasePostCount'].'</td><td><label><input type="checkbox" name="increase_post_count" value="1"'.$increase_post_count_checked.' /> '.$lang['Yes'].'</label></td></tr>';
+ 				$content .= '<tr><td class="fieldtitle">'.$lang['ForumsAutoLock'].'</td><td>'.sprintf($lang['ForumsAutoLockXReplies'], '<input type="text" size="4" name="auto_lock" maxlength="11" value="'.$_POST['auto_lock'].'" />').'</td></tr>';
+ 				
++				$content .= '<tr><th colspan="2">'.$lang['ForumsUsergroupSettings'].'</th></tr>';
++				
++				$usergroups = $admin_functions->get_usergroups_array();
++				
++				$readinput = '<select name="readaccess">';
++				$selected = ( $_POST['readaccess'] == '-1' ) ? ' selected="selected"' : '';
++				
++				$readinput .= '<option value="-1"'.$selected.'>'.$lang['ForumsUsergroupEveryone'].'</option>';
++				
++				foreach ( $usergroups as $usergroup )
++				{
++					$selected = ( $_POST['readaccess'] == $usergroup['id'] ) ? ' selected="selected"' : '';
++					$readinput .= '<option value="'.$usergroup['id'].'"'.$selected.'>'.$usergroup['name'].'</option>';
++				}
++				
++				$readinput .= '</select>';
++				$content .= '<tr><td class="fieldtitle">'.$lang['ForumsUsergroupReadSetting'].'</td><td>'.$readinput.'</td></tr>';
++				
++				$writeinput = '<select name="writeaccess">';
++				$selected = ( $_POST['writeaccess'] == '-1' ) ? ' selected="selected"' : '';
++				
++				$writeinput .= '<option value="-1"'.$selected.'>'.$lang['ForumsUsergroupEveryone'].'</option>';
++				
++				foreach ( $usergroups as $usergroup )
++				{
++					$selected = ( $_POST['writeaccess'] == $usergroup['id'] ) ? ' selected="selected"' : '';
++					$writeinput .= '<option value="'.$usergroup['id'].'"'.$selected.'>'.$usergroup['name'].'</option>';
++				}
++				
++				$writeinput .= '</select>';
++				$content .= '<tr><td class="fieldtitle">'.$lang['ForumsUsergroupWriteSetting'].'</td><td>'.$writeinput.'</td></tr>';
++								
++				
+ 				$content .= '<tr><th colspan="2">'.$lang['ForumsAuth'].'</th></tr><tr><td colspan="2"><strong>'.$lang['ForumsAuthNote'].'</strong></td></tr>';
+ 				
+ 				foreach ( range(0, 9) as $authid ) {
+diff -udPr UseBB/sources/admin_update_groups.php usercatmod/sources/admin_update_groups.php
+--- UseBB/sources/admin_update_groups.php	1970-01-01 01:00:00.000000000 +0100
++++ usercatmod/sources/admin_update_groups.php	2007-01-07 19:53:43.031250000 +0100
+@@ -0,0 +1,181 @@
++<?php
++
++/*
++	Copyright (C) 2003-2007 UseBB Team
++	http://www.usebb.net
++	
++	$Header: /cvsroot/usebb/UseBB/sources/admin_update_groups.php,v 1.12 2007/01/01 11:58:46 Rick Pastoor Exp $
++	
++	This file is part of UseBB.
++	
++	UseBB is free software; you can redistribute it and/or modify
++	it under the terms of the GNU General Public License as published by
++	the Free Software Foundation; either version 2 of the License, or
++	(at your option) any later version.
++	
++	UseBB is distributed in the hope that it will be useful,
++	but WITHOUT ANY WARRANTY; without even the implied warranty of
++	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++	GNU General Public License for more details.
++	
++	You should have received a copy of the GNU General Public License
++	along with UseBB; if not, write to the Free Software
++	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++*/
++
++/**
++ * ACP member management
++ *
++ * Gives an interface to edit members on the board.
++ *
++ * @author	Rick Pastoor
++ * @link	http://www.usebb.net
++ * @license	GPL-2
++ * @version	$Revision: 1.00 $
++ * @copyright	Copyright (C) 2003-2007 UseBB Team
++ * @package	UseBB
++ * @subpackage	ACP
++ */
++
++//
++// Die when called directly in browser
++//
++if ( !defined('INCLUDED') )
++	exit();
++
++$_GET['do'] = ( !empty($_GET['do']) ) ? $_GET['do'] : '';
++
++if ( !empty($_GET['id']) && valid_int($_GET['id']) ) {
++	$result = $db->query("SELECT * FROM ".TABLE_PREFIX."members WHERE id = ".$_GET['id']);
++	$memberdata = $db->fetch_result($result);
++	
++	if ( $memberdata['id'] ) {
++	
++		if ($_GET['do'] == 'add' && !empty($_GET['id']) )
++		{
++			$result = $db->query("SELECT id, name FROM ".TABLE_PREFIX."usergroups WHERE id NOT IN (SELECT group_id FROM ".TABLE_PREFIX."usergroup WHERE user_id = " . $memberdata['id'] . ") ORDER BY name ASC");
++
++			$usergroups = array();
++
++			while ( $usergroupdata = $db->fetch_result($result) )
++				$usergroups[] = $usergroupdata;
++			
++			$select = '';
++			
++			foreach ( $usergroups as $usergroup )
++				$select .= '<option value="' . $usergroup['id'] . '">'.$usergroup['name'].'</option>';
++				
++			$content = '<p>'.$lang['UpdateGroupsAddUserToGroupInfo'].'</p>';
++			$content .= '<form action="'.$functions->make_url('admin.php', array('act' => 'update_groups', 'id' => $memberdata['id'], 'do' => 'save')).'" method="post">';
++			$content .= '<table id="adminregulartable"><tr><th colspan="2">'.$lang['UsergroupsAddUserToGroupCaption'].'</th></tr>';
++			$content .= '<tr><td class="fieldtitle">'.$lang['UsergroupsGroupName'].'</td><td><select name="group_id">'.$select.'</select></td></tr>';
++			$content .= '<tr><td colspan="2" class="submit"><input type="submit" value="'.$lang['Save'].'" /></td></tr>';
++			$content .= '</table>';
++			$content .= '</form>';
++		}
++		elseif ($_GET['do'] == 'save' && !empty($_GET['id']) )
++		{
++			$result = $db->query("SELECT id FROM ".TABLE_PREFIX."usergroups WHERE id NOT IN (SELECT group_id FROM ".TABLE_PREFIX."usergroup WHERE user_id = " . $memberdata['id'] . ")");
++
++			$usergroups = array();
++
++			while ( $usergroupdata = $db->fetch_result($result) )
++				$usergroups[] = $usergroupdata['id'];
++			
++			if ( in_array($_POST['group_id'], $usergroups) )
++			{
++				$db->query("INSERT INTO ".TABLE_PREFIX."usergroup (user_id, group_id) VALUES (".$_GET['id'].",".$_POST['group_id'].")");
++				
++				$functions->redirect('admin.php', array('act' => 'update_groups', 'id' => $_GET['id']));
++			}
++			else
++			{
++				$functions->redirect('admin.php', array('act' => 'update_groups'));
++			}
++		}
++		elseif ($_GET['do'] == 'delete' && !empty($_GET['id']) && !empty($_GET['group_id']) )
++		{
++			$db->query("DELETE FROM ".TABLE_PREFIX."usergroup WHERE user_id = " . $_GET['id'] . " AND group_id = " . $_GET['group_id']);
++			
++			$functions->redirect('admin.php', array('act' => 'update_groups', 'id' => $_GET['id']));
++		}
++		else
++		{
++			$result = $db->query("SELECT s.id, s.name, s.descr FROM ".TABLE_PREFIX."usergroup as u, ".TABLE_PREFIX."usergroups as s WHERE u.user_id = " . $memberdata['id'] . " AND u.group_id = s.id");
++
++			$usergroups = array();
++
++			while ( $usergroupdata = $db->fetch_result($result) )
++				$usergroups[] = $usergroupdata;
++			
++			$content = '<p>'.$lang['UpdateGroupsInfo'].'</p>';
++			$content .= '<ul id="adminfunctionsmenu">';
++			$content .= '<li><a href="'.$functions->make_url('admin.php', array('act' => 'update_groups', 'do' => 'add', 'id' => $memberdata['id'])).'">'.$lang['UpdateGroupsAddGroupToUser'].'</a></li>';
++			$content .= '</ul>';
++			
++			$content .= '<table id="adminregulartable"><tr><th>'.$lang['UsergroupsGroupName'].'</th><th class="action">'.$lang['Delete'].'</th></tr>';
++			
++			if ( !count($usergroups) )
++			{
++				$content .= '<tr><td colspan="2">'.$lang['UsergroupsPanelNoUsergroups'].'</td></tr>';
++			}
++			else
++			{
++				foreach( $usergroups as $usergroup_data )
++				{
++					$content .= '<tr><td class="">'.$usergroup_data['name'].'<div class="jump-in-data">'.$usergroup_data['descr'].'</div></td><td class="action"><a href="'.$functions->make_url('admin.php', array('act' => 'update_groups', 'do' => 'delete', 'group_id' => $usergroup_data['id'], 'id' => $memberdata['id'])).'">'.$lang['Delete'].'</a></td></tr>';
++				}
++			}
++			
++			$content .= '</table>';
++		}
++	}
++	else
++	{
++		$functions->redirect('admin.php', array('act' => 'update_groups'));
++	}
++	
++} else {
++	
++	$search_member = ( !empty($_POST['search_member']) ) ? $_POST['search_member'] : '';
++	
++	$content = '<h2>'.$lang['MembersSearchMember'].'</h2>';
++	$content .= '<p>'.$lang['MembersSearchMemberInfo'].'</p>';
++	$content .= '<form action="'.$functions->make_url('admin.php', array('act' => 'update_groups')).'" method="post">';
++	$content .= '<p>'.$lang['MembersSearchMemberExplain'].': <input type="text" name="search_member" id="search_member" size="20" maxlength="255" value="'.unhtml(stripslashes($search_member)).'" /> <input type="submit" value="'.$lang['Search'].'" /></p>';
++	$content .= '</form>';
++	
++	if ( !empty($search_member) ) {
++		
++		$search_member_sql = preg_replace(array('#%#', '#_#', '#\s+#'), array('\%', '\_', ' '), $_POST['search_member']);
++		$result = $db->query("SELECT id, name, displayed_name FROM ".TABLE_PREFIX."members WHERE name LIKE '%".$search_member_sql."%' OR displayed_name LIKE '%".$search_member_sql."%' ORDER BY name ASC");
++		$matching_members = array();
++		while ( $memberdata = $db->fetch_result($result) )
++			$matching_members[$memberdata['id']] = array(unhtml(stripslashes($memberdata['name'])), unhtml(stripslashes($memberdata['displayed_name'])));
++		
++		if ( count($matching_members) ) {
++			
++			$select = '<select name="id">';
++			foreach ( $matching_members as $key => $val )
++				$select .= '<option value="'.$key.'">'.$val[0].' ('.$val[1].')</option>';
++			$select .= '</select>';
++			
++			$content .= '<form action="'.$functions->make_url('admin.php', array('act' => 'update_groups')).'" method="get">';
++			$content .= '<p>'.$lang['MembersSearchMemberList'].': <input type="hidden" name="act" value="update_groups" />'.$select.' <input type="submit" value="'.$lang['Edit'].'" /></p>';
++			$content .= '</form>';
++			
++		} else {
++			
++			$content .= '<p>'.sprintf($lang['MembersSearchMemberNotFound'], '<em>'.unhtml(stripslashes($_POST['search_member'])).'</em>').'</p>';
++			
++		}
++		
++	}
++	
++	$template->set_js_onload("set_focus('search_member')");
++	
++}
++
++$admin_functions->create_body('update_groups', $content);
++
++?>
+diff -udPr UseBB/sources/admin_usergroups.php usercatmod/sources/admin_usergroups.php
+--- UseBB/sources/admin_usergroups.php	1970-01-01 01:00:00.000000000 +0100
++++ usercatmod/sources/admin_usergroups.php	2007-01-07 16:21:24.265625000 +0100
+@@ -0,0 +1,159 @@
++<?php
++
++/*
++	Copyright (C) 2003-2007 UseBB Team
++	http://www.usebb.net
++	
++	$Header: /cvsroot/usebb/UseBB/sources/admin_usergroups.php,v 1.17 2007/01/01 11:58:44 Rick Pastoor Exp $
++	
++	This file is a modification of Rick Pastoor
++	
++	UseBB is free software; you can redistribute it and/or modify
++	it under the terms of the GNU General Public License as published by
++	the Free Software Foundation; either version 2 of the License, or
++	(at your option) any later version.
++	
++	UseBB is distributed in the hope that it will be useful,
++	but WITHOUT ANY WARRANTY; without even the implied warranty of
++	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++	GNU General Public License for more details.
++	
++	You should have received a copy of the GNU General Public License
++	along with UseBB; if not, write to the Free Software
++	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++*/
++
++/**
++ * ACP usergroup management
++ *
++ * Gives an interface to manage usergroups on the board
++ *
++ * @author	Rick Pastoor
++ * @license	GPL-2
++ * @version	$Revision: 1.00 $
++ * @copyright	Copyright (C) 2003-2007 Rick Pastoor
++ * @package	UseBB
++ * @subpackage	ACP
++ */
++
++//
++// Die when called directly in browser
++//
++if ( !defined('INCLUDED') )
++	exit();
++
++$usergroups = $admin_functions->get_usergroups_array();
++
++$_GET['do'] = ( !empty($_GET['do']) ) ? $_GET['do'] : 'index';
++
++if ( in_array($_GET['do'], array('index')) ) {
++	
++	$content = '<p>'.$lang['UsergroupsInfo'].'</p>';
++	$content .= '<ul id="adminfunctionsmenu">';
++		$content .= '<li><a href="'.$functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'add')).'">'.$lang['UsergroupsAddNewUsergroup'].'</a></li> ';
++	$content .= '</ul>';
++	
++	if ( !count($usergroups) ) {
++		
++		$content .= '<p>'.$lang['UsergroupsNoUsergroupsExist'].'</p>';
++		
++	} else {
++		
++		$content .= '<table id="adminregulartable"><tr><th>'.$lang['UsergroupsGroupName'].'</th><th class="action">'.$lang['Edit'].'</th><th class="action">'.$lang['Delete'].'</th></tr>';
++		
++		if ( count($usergroups) ) {
++			
++			foreach ( $usergroups as $usergroup ) {
++				
++				$content .= '<tr><td><em>'.unhtml(stripslashes($usergroup['name'])).'</em></td><td class="action"><a href="'.$functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'edit', 'id' => $usergroup['id'])).'">'.$lang['Edit'].'</a></td><td class="action"><a href="'.$functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'delete', 'id' => $usergroup['id'])).'">'.$lang['Delete'].'</a></td></tr>';
++			}
++		}
++		
++		$content .= '</table></form>';
++	}
++} elseif ( $_GET['do'] == 'delete' && !empty($_GET['id']) && array_key_exists($_GET['id'], $usergroups) ) {
++	
++	if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
++	{
++		
++		if ( !empty($_POST['delete']) ) {
++			$admin_functions->delete_usergroup($_GET['id']);
++		}
++		
++		$functions->redirect('admin.php', array('act' => 'usergroups'));
++	} else {
++		
++		$content = '<h2>'.$lang['UsergroupsConfirmUsergroupDelete'].'</h2>';
++		$content .= '<p><strong>'.sprintf($lang['UsergroupsConfirmUsergroupContent'], '<em>'.unhtml(stripslashes($usergroups[$_GET['id']]['name'])).'</em>').'</strong></p>';
++		$content .= '<form action="'.$functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'delete', 'id' => $_GET['id'])).'" method="post">';
++		$content .= '<p class="submit"><input type="submit" name="delete" value="'.$lang['Delete'].'" /> <input type="submit" value="'.$lang['Cancel'].'" /></p>';
++		$content .= '</form>';	
++	}
++} elseif ( ( $_GET['do'] == 'edit' && !empty($_GET['id']) && array_key_exists($_GET['id'], $usergroups) ) || $_GET['do'] == 'add' ) {
++	if ( $_GET['do'] == 'edit' ) {
++		$usergroupinfo = $usergroups[$_GET['id']];			
++	}
++	
++	if ( !empty($_POST['name']) )
++	{
++		$_POST['descr'] = ( !empty($_POST['descr']) ) ? $_POST['descr'] : '';
++		
++		if ( $_GET['do'] == 'edit' ) {
++			$db->query("UPDATE ".TABLE_PREFIX."usergroups SET
++					name = '".$_POST['name']."',
++					descr = '".$_POST['descr']."'
++				WHERE id = ".$_GET['id']);
++		}
++		else
++		{
++			$db->query("INSERT INTO ".TABLE_PREFIX."usergroups VALUES(NULL, '".$_POST['name']."', '".$_POST['descr']."');");
++		}
++		
++		$functions->redirect('admin.php', array('act' => 'usergroups'));
++	}
++	else
++	{
++		if ( $_GET['do'] == 'edit' )
++			$content = '<h2>'.sprintf($lang['UsergroupsEditingUsergroup'], '<em>'.unhtml(stripslashes($usergroupinfo['name'])).'</em>').'</h2>';
++		else
++			$content = '<h2>'.$lang['UsergroupsAddNewUsergroup'].'</h2>';
++		
++		if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
++			$errors = array();
++			
++			if ( count($errors) )
++				$content .= '<p><strong>'.sprintf($lang['MissingFields'], join(', ', $errors)).'</strong></p>';
++		}
++		
++		if ( $_GET['do'] == 'edit' ) {
++			foreach ( $usergroupinfo as $id => $val )
++				$_POST[$id] = ( isset($_POST[$id]) ) ? $_POST[$id] : $val;
++			
++			$form = $functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'edit', 'id' => $_GET['id']));
++			$action = $lang['Edit'];
++		}
++		else
++		{
++			$fields = array('name', 'descr');
++			
++			foreach ( $fields as $id )
++				$_POST[$id] = ( isset($_POST[$id]) ) ? $_POST[$id] : '';
++				
++			$form = $functions->make_url('admin.php', array('act' => 'usergroups', 'do' => 'add'));
++			$action = $lang['Add'];
++		}
++		
++		$content .= '<form action="'.$form.'" method="post">';
++		$content .= '<table id="adminregulartable">';
++			$content .= '<tr><th colspan="2">'.$lang['UsergroupsGeneral'].'</th></tr>';
++			$content .= '<tr><td class="fieldtitle">'.$lang['UsergroupsUsergroupName'].'</td><td><input type="text" size="30" name="name" id="name" maxlength="255" value="'.unhtml(stripslashes($_POST['name'])).'" /></td></tr>';
++			$content .= '<tr><td class="fieldtitle">'.$lang['UsergroupsUsergroupDescr'].'</td><td><input type="text" size="30" name="descr" id="descr" maxlength="255" value="'.unhtml(stripslashes($_POST['descr'])).'" /></td></tr>';
++		$content .= '<tr><td colspan="2" class="submit"><input type="submit" value="'.$action.'" /> <input type="reset" value="'.$lang['Reset'].'" /></td></tr></table></form>';
++		
++		$template->set_js_onload("set_focus('name')");
++	}
++}
++
++$admin_functions->create_body('usergroups', $content);
++
++?>
+diff -udPr UseBB/sources/functions.php usercatmod/sources/functions.php
+--- UseBB/sources/functions.php	2007-01-01 12:58:48.000000000 +0100
++++ usercatmod/sources/functions.php	2007-01-08 23:29:48.203125000 +0100
+@@ -1248,6 +1248,57 @@
+ 		if ( ( $self && $session->sess_info['ip_banned'] ) || ( $this->get_config('board_closed') && $user_info['level'] < LEVEL_ADMIN ) )
+ 			return false;
+ 		
++		// START USERGROUPS MOD
++		
++		// Get forum info. If read/write group is larger than -1 we need to check if the current user has access.
++		$result = $db->query("SELECT f.readaccess, f.writeaccess FROM ".TABLE_PREFIX."forums AS f WHERE id = " . $forum_id);
++		
++		$forums = array();
++		
++		while ( $forumdata = $db->fetch_result($result) )
++			$forums[] = $forumdata;
++		
++		if ( count($forums) )
++		{
++			$foruminfo = $forums[0];
++
++			if ($foruminfo['readaccess'] > -1 || $foruminfo['writeaccess'] > -1)
++			{
++				if ( $session->sess_info['user_id'] )
++				{
++					$result = $db->query("SELECT s.id FROM ".TABLE_PREFIX."usergroup as u, ".TABLE_PREFIX."usergroups as s WHERE u.user_id = " . $session->sess_info['user_info']['id'] . " AND u.group_id = s.id");
++
++					$usergroups = array();
++
++					while ( $usergroupdata = $db->fetch_result($result) )
++						$usergroups[] = $usergroupdata['id'];
++					
++					// So we have our array with usergroup data, and now we need to check if the current user has acces to the requested forum
++					if ( $action == 0 || $action == 1 )
++					{
++						if ( !in_array($foruminfo['readaccess'], $usergroups) && !($session->sess_info['user_info']['level'] == LEVEL_ADMIN) )
++						{
++							return false;
++						}
++					}
++
++					if ( $action > 1 )
++					{
++						if ( !in_array($foruminfo['writeaccess'], $usergroups) && !($session->sess_info['user_info']['level'] == LEVEL_ADMIN) )
++						{
++							return false;
++						}
++					}
++				}
++				else
++				{
++					return false;
++				}
++			}
++		}
++		
++		// END USERGROUPS MOD
++		
+ 		//
+ 		// Define the user level
+ 		//
+diff -udPr UseBB/sources/functions_admin.php usercatmod/sources/functions_admin.php
+--- UseBB/sources/functions_admin.php	2007-01-01 12:58:48.000000000 +0100
++++ usercatmod/sources/functions_admin.php	2007-01-07 16:10:55.281250000 +0100
+@@ -82,6 +82,10 @@
+ 			'activate_members',
+ 			'register_members',
+ 			'delete_members',
++			'update_groups',
++		),
++		'usergroups' => array(
++			'usergroups',
+ 		),
+ 		'pruning' => array(
+ 			'prune_forums',
+@@ -612,6 +616,34 @@
+ 		
+ 	}
+ 	
++	/**
++	* Get usergroups
++	*
++	* @returns array Array containing usergroup information
++	*/
++	function get_usergroups_array() {
++		global $db;
++		
++		$result = $db->query("SELECT id, name, descr FROM ".TABLE_PREFIX."usergroups ORDER BY name ASC");
++		$usergroups = array();
++		while ( $usergroupinfo = $db->fetch_result($result) )
++			$usergroups[$usergroupinfo['id']] = $usergroupinfo;
++			
++		return $usergroups;
++	}
++	
++	/**
++	* Removes a usergroup
++	*
++	* @param string $condition SQL condition to match forums
++	*/
++	function delete_usergroup($id)
++	{
++		global $db;
++		
++		$db->query("DELETE FROM ".TABLE_PREFIX."usergroup WHERE group_id = ".$id);
++		$db->query("DELETE FROM ".TABLE_PREFIX."usergroups WHERE id = ".$id);
++	}
+ }
+ 
+ ?>
+diff -udPr UseBB/sources/panel_usergroups.php usercatmod/sources/panel_usergroups.php
+--- UseBB/sources/panel_usergroups.php	1970-01-01 01:00:00.000000000 +0100
++++ usercatmod/sources/panel_usergroups.php	2007-01-05 22:21:48.796875000 +0100
+@@ -0,0 +1,73 @@
++<?php
++
++/*
++	Copyright (C) 2003-2007 UseBB Team
++	http://www.usebb.net
++	
++	$Header: /cvsroot/usebb/UseBB/sources/panel_logout.php,v 1.19 2007/01/01 11:58:49 pc_freak Exp $
++	
++	This file is part of UseBB.
++	
++	UseBB is free software; you can redistribute it and/or modify
++	it under the terms of the GNU General Public License as published by
++	the Free Software Foundation; either version 2 of the License, or
++	(at your option) any later version.
++	
++	UseBB is distributed in the hope that it will be useful,
++	but WITHOUT ANY WARRANTY; without even the implied warranty of
++	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++	GNU General Public License for more details.
++	
++	You should have received a copy of the GNU General Public License
++	along with UseBB; if not, write to the Free Software
++	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++*/
++
++/**
++ * Panel usergroups
++ *
++ * Gives an interface where the user can see to wich usergroups he/she belongs
++ *
++ * @author	Rick Pastoor
++ * @link	http://www.usebb.net
++ * @license	GPL-2
++ * @version	$Revision: 1.19 $
++ * @copyright	Copyright (C) 2003-2007 UseBB Team
++ * @package	UseBB
++ * @subpackage	Panel
++ */
++
++//
++// Die when called directly in browser
++//
++if ( !defined('INCLUDED') )
++	exit();
++	
++$result = $db->query("SELECT s.name, s.descr FROM ".TABLE_PREFIX."usergroup as u, ".TABLE_PREFIX."usergroups as s WHERE u.user_id = " . $session->sess_info['user_info']['id'] . " AND u.group_id = s.id");
++
++$usergroups = array();
++
++while ( $usergroupdata = $db->fetch_result($result) )
++	$usergroups[] = $usergroupdata;
++
++$content = '';
++
++if ( !count($usergroups) )
++{
++	$content = '<tr><td>'.$lang['UsergroupsPanelNoUsergroups'].'</td></tr>';
++}
++else
++{
++	foreach( $usergroups as $usergroup_data )
++	{
++		$content .= '<tr><td class="">'.$usergroup_data['name'].'<div class="jump-in-data">'.$usergroup_data['descr'].'</div></td></tr>';
++	}
++}
++	
++$template->parse('usergroups', 'panel', array(
++	'caption' => $lang['UsergroupsPanelCaption'],
++	'usergroups_title' => $lang['Usergroups'],
++	'usergroups_table_content' => $content,
++));
++
++?>
+diff -udPr UseBB/templates/default/panel.tpl.php usercatmod/templates/default/panel.tpl.php
+--- UseBB/templates/default/panel.tpl.php	2007-01-01 12:58:50.000000000 +0100
++++ usercatmod/templates/default/panel.tpl.php	2007-01-05 20:49:08.328125000 +0100
+@@ -34,7 +34,7 @@
+ //
+ 
+ $templates['menu'] = '
+-	<ul id="panelmenu"><li id="first">{panel_subscriptions}</li><li>{view_profile}</li><li>{panel_profile}</li><li>{panel_options}</li><li>{panel_passwd}</li></ul>
++	<ul id="panelmenu"><li id="first">{panel_usergroups}</li><li>{panel_subscriptions}</li><li>{view_profile}</li><li>{panel_profile}</li><li>{panel_options}</li><li>{panel_passwd}</li></ul>
+ ';
+ 
+ $templates['sess_info'] = '
+@@ -256,4 +256,13 @@
+ 	{form_end}
+ ';
+ 
++$templates['usergroups'] = '
++	{caption}
++	<table class="maintable">
++		<tr>
++			<th colspan="2">{usergroups_title}</th>
++		</tr>
++		{usergroups_table_content}
++	</table>	
++';
+ ?>
