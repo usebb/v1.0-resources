@@ -1,0 +1,9 @@
+=======================================
+=======================================
+Traduction pour la version UseBB 1.0.10
+=======================================
+=======================================
+
+Fichier a deplacer dans le dossier "languages"
+
+Cordialement The Doctor
