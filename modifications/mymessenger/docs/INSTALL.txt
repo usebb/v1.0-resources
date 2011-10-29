@@ -1,0 +1,11 @@
+MyMessenger UseBB Install Instructions
+------------------------------------------
+
+1. MAKE BACKUPS!
+2. Run "sql/mymessenger.sql" in PHPMyAdmin to alter your database.
+3. Upload "upload/panel_messenger.php" to the "/sources" directory of your UseBB Installation.
+4. Upload "upload/page_head.php" to the "/sources" directory of your UseBB Installation.
+5. Upload "upload/panel.php" to the root directory of your UseBB Installation, overwriting the stock copy.
+6. Upload "upload/profile.php" to the root directory of your UseBB Installation, overwriting the stock copy.
+
+You're Done!
