@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Member Management
  *
@@ -11,8 +13,6 @@
  * @copyright	Copyright (C) 2003-2005 UseBB Team
  *
  **/
-
-<?php
 
 $usebb_module_info = array( 
 	'short_name' => 'members',

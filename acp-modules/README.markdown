@@ -51,3 +51,10 @@ translation-helper.php
 ----------------------
 
 The original translation helper ACP module that was distributed with UseBB until 1.0 final.
+
+moderators.php
+--------------
+
+An ACP module that allows you to change a members status to moderator, remove moderator status from a member, and also attach a moderator to a selected forum.
+
+* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
