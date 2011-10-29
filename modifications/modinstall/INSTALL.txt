@@ -1,0 +1,15 @@
+modInstall v.2 Installation Instructions
+- - - - - - - - - - - - - - - - - - - - - 
+
+Installation instructions for an install wizard? Heh, sure.
+
+1. Upload the upload/modInstall directory into the root directory of your UseBB. *THIS IS IMPORTANT OR YOU MAY ENCOUNTER DIFFICULTIES WITH WRITING THE CONFIG.PHP FILE.* If you must place it somewhere else, edit the CONSTANT "USEBB_PATH" in modInstall.php accordingly.
+
+2. Access http://url/to/UseBB/modInstall to run the wizard.
+
+Notice
+- - - - - - - - - - - - - - - - - - - - - 
+
+After the modInstall Wizard completes, it will lock, denying any more installs. An extra (and recommended) precaution is to completely delete the /modInstall directory from your UseBB root dir.
+
+Enjoy!

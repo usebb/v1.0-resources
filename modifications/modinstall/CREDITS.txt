@@ -1,0 +1,20 @@
+THE AUTHOR
+- - - - - - - - - - - - - - - - - - - -
+
+modInstall .2 Designed and Developed by:
+
+	Jake Wehner <jwehner@wehnerweb.com>
+	Wehnerweb Media Solutions
+	http://www.wehnerweb.com
+	(c) Copyright Wehnerweb Media Solutions 2004, All Rights Reserved.
+
+UseBB: 
+
+	Dietrich Moerman and The UseBB Team
+	http://www.usebb.net
+	(c) Copyright 2003-2004 UseBB Team
+
+Special Thanks to Dietrich for Developing UseBB, and for free!
+
+
+	
