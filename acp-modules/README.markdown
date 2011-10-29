@@ -6,16 +6,6 @@ active_members.php
 
 This module allows you to see a list of active members in the past `x` hours, along with the time of their last pageview.
 
-basic-acp
----------
-
-A simple control panel for managing various content types in UseBB 0.x. It was developed at the time the ACP was not yet fully completed.
-
-**Note:** it is very likely issues exist within this code, or the code does not work anymore on recent PHP versions!
-
-* Original description: "This is a basic Administrative GUI for Categories, Forums, Members, and Moderators."
-* Author: [robot-00](http://sourceforge.net/users/robot-00/)
-
 dnsbl_test.php
 --------------
 
@@ -40,6 +30,13 @@ merge_topics.php
 
 This ACP module allows an administrator to merge two topics into one single topic. The posts of topic A are transferred to topic B, while keeping the statistics and without breaking the forum. This also works for topics in different forums.
 
+moderators.php
+--------------
+
+An ACP module that allows you to change a members status to moderator, remove moderator status from a member, and also attach a moderator to a selected forum.
+
+* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
+
 set_template.php
 ----------------
 
@@ -51,10 +48,3 @@ translation-helper.php
 ----------------------
 
 The original translation helper ACP module that was distributed with UseBB until 1.0 final.
-
-moderators.php
---------------
-
-An ACP module that allows you to change a members status to moderator, remove moderator status from a member, and also attach a moderator to a selected forum.
-
-* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
