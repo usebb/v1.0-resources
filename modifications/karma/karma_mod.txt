@@ -1,0 +1,260 @@
+/*
+	Copyright (C) 2003-2004 FreeX-Tech - Vandamme Samuel
+	http://www.freex-tech.com
+	
+	This file is part of a mod for UseBB.
+	
+	UseBB is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	UseBB is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UseBB; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#######################################################
+# Open Topic.PHP
+#######################################################
+
+#######################################################
+# Find
+#######################################################
+
+//				
+// Used for switching colors in template
+				
+//				
+$i = ( !isset($i) ) ? 1 : $i+1;
+
+#######################################################
+# Add After
+#######################################################
+
+//
+// User's karma
+//
+					
+	//
+	// Calculate Vote
+	//					
+	$karma_v = $functions->karma_calculate($postsdata['poster_id'],0);
+						
+	//
+	// Karma Options
+	//	
+	if ( $postsdata['poster_id'] == $session->sess_info['user_id'] || $session->sess_info['user_id'] == 0  )
+		$karma_o = '';
+	else
+		$karma_o = '<a href="'.$functions->make_url('karma.php', array('id' => $postsdata['poster_id'], 'act' => 'raise', 'post_o' => $postsdata['id'], 'post_t' => $i)).'">+</a> | <a href="'.$functions->make_url('karma.php', array('id' => $postsdata['poster_id'],'act' => 'lower', 'post_o' => $postsdata['id'], 'post_t' => $i)).'">-</a>';
+
+#######################################################
+# Find
+#######################################################
+
+//
+// Output the post
+//
+	$template->parse('topic_post', array(
+			'poster_name' => $poster_name,
+			'poster_rank' => $poster_rank,
+			'poster_avatar' => $avatar,
+			'post_anchor' => '<a href="'.$functions->make_url('topic.php', array('post' => $postsdata['id'])).'#post'.$postsdata['id'].'" name="post'.$postsdata['id'].'">#'.$i.'</a>',
+			'post_date' => $functions->make_date($postsdata['post_time']),
+			'post_links' => $post_links,
+			'post_content' => $post_content,
+			'colornum' => $colornum
+		));
+
+#######################################################
+# Replace With
+#######################################################
+
+//
+// Output the post
+//
+	$template->parse('topic_post', array(
+			'poster_name' => $poster_name,
+			'poster_rank' => $poster_rank,
+			'poster_karma' => $lang['Karma'],
+			'poster_karma_v' => $karma_v,
+			'poster_karma_o' => $karma_o,
+			'poster_avatar' => $avatar,
+			'post_anchor' => '<a href="'.$functions->make_url('topic.php', array('post' => $postsdata['id'])).'#post'.$postsdata['id'].'" name="post'.$postsdata['id'].'">#'.$i.'</a>',
+			'post_date' => $functions->make_date($postsdata['post_time']),
+			'post_links' => $post_links,
+			'post_content' => $post_content,
+			'colornum' => $colornum
+		));
+
+#######################################################
+# Open sources/functions.PHP
+#######################################################
+
+#######################################################
+# Find (end of file)
+#######################################################
+
+}
+
+?>
+
+#######################################################
+# Before Add
+#######################################################
+
+//
+// Calculate Karma
+//
+function karma_calculate($id,$round) {
+	global $db;
+	//
+	// Get Votes
+	//
+	if ( !($result = $db->query("SELECT vote FROM ".TABLE_PREFIX."karma WHERE id_u = ".$id)) )
+	$functions->usebb_die('SQL', 'Unable to get karma!', __FILE__, __LINE__);
+						
+	//
+	// Calculation
+	//
+	$karma_votes = 0;
+	$karma_value = 0;
+						
+	while ( $karma_data = $db->fetch_result($result) ) {
+		$karma_votes++;
+		$karma_value = $karma_value + $karma_data['vote'];
+	}	
+						
+	if ( $karma_votes == 0 )
+		return 0;
+	else
+		return round($karma_value / $karma_votes, $round);
+	}
+
+#######################################################
+# Open profile.PHP
+#######################################################
+
+#######################################################
+# Find 
+#######################################################	
+
+$template->parse('profile', array(
+		'title'         => sprintf($lang['Profile'], $profiledata['name']),
+		'username'      => $lang['Username'],
+		'username_v'    => $profiledata['name'],
+		'userid'        => $lang['UserID'],
+		'userid_v'      => $_GET['id'],
+		'level'         => $lang['Level'],
+		'level_v'       => $level,
+		'rank'          => $lang['Rank'],
+		'rank_v'        => ( !empty($profiledata['rank']) ) ? stripslashes($profiledata['rank']) : '',
+		'avatar'        => $lang['Avatar'],
+		'avatar_v'      => $avatar,
+		'regdate'       => $lang['Registered'],
+		'regdate_v'     => $functions->make_date($profiledata['regdate']),
+		'posts'         => $lang['Posts'],
+		'posts_v'       => $profiledata['posts'],
+		'postsperday'   => $lang['PostsPerDay'],
+		'postsperday_v' => $posts_per_day,
+		'lastlogin'     => $lang['LastLogin'],
+		'lastlogin_v'   => $last_login,
+		'location'      => $lang['Location'],
+		'location_v'    => stripslashes($profiledata['location']),
+		'website'       => $lang['Website'],
+		'website_v'     => ( !empty($profiledata['website']) ) ? '<a href="'.$profiledata['website'].'" target="_blank">'.$profiledata['website'].'</a>' : '',
+		'occupation'    => $lang['Occupation'],
+		'occupation_v'  => stripslashes($profiledata['occupation']),
+		'interests'     => $lang['Interests'],
+		'interests_v'   => stripslashes($profiledata['interests']),
+		'signature'     => $lang['Signature'],
+		'signature_v'   => $functions->markup(stripslashes($profiledata['signature']), $functions->get_config('sig_allow_bbcode'), $functions->get_config('sig_allow_smilies')),
+		'contact_info'  => $lang['ContactInfo'],
+		'email'         => $lang['Email'],
+		'email_v'       => $functions->show_email($profiledata),
+		'msnm'          => $lang['MSNM'],
+		'msnm_v'        => stripslashes($profiledata['msnm']),
+		'yahoom'        => $lang['YahooM'],
+		'yahoom_v'      => stripslashes($profiledata['yahoom']),
+		'aim'           => $lang['AIM'],
+		'aim_v'         => stripslashes($profiledata['aim']),
+		'icq'           => $lang['ICQ'],
+		'icq_v'         => stripslashes($profiledata['icq']),
+		'icq_status'    => ( is_numeric($profiledata['icq']) ) ? '<img src="http://web.icq.com/whitepages/online?icq='.intval($profiledata['icq']).'&amp;img=25" alt="'.intval($profiledata['icq']).'" />' : '',
+		'jabber'        => $lang['Jabber'],
+		'jabber_v'      => stripslashes($profiledata['jabber'])
+	));
+
+#######################################################
+# Replace With
+#######################################################
+
+$template->parse('profile', array(
+		'title'         => sprintf($lang['Profile'], $profiledata['name']),
+		'username'      => $lang['Username'],
+		'username_v'    => $profiledata['name'],
+		'userid'        => $lang['UserID'],
+		'userid_v'      => $_GET['id'],
+		'level'         => $lang['Level'],
+		'level_v'       => $level,
+		'rank'          => $lang['Rank'],
+		'rank_v'        => ( !empty($profiledata['rank']) ) ? stripslashes($profiledata['rank']) : '',
+		'karma'		=> $lang['Karma'],
+		'karma_v'	=> $functions->karma_calculate($profiledata['id'],1),
+		'avatar'        => $lang['Avatar'],
+		'avatar_v'      => $avatar,
+		'regdate'       => $lang['Registered'],
+		'regdate_v'     => $functions->make_date($profiledata['regdate']),
+		'posts'         => $lang['Posts'],
+		'posts_v'       => $profiledata['posts'],
+		'postsperday'   => $lang['PostsPerDay'],
+		'postsperday_v' => $posts_per_day,
+		'lastlogin'     => $lang['LastLogin'],
+		'lastlogin_v'   => $last_login,
+		'location'      => $lang['Location'],
+		'location_v'    => stripslashes($profiledata['location']),
+		'website'       => $lang['Website'],
+		'website_v'     => ( !empty($profiledata['website']) ) ? '<a href="'.$profiledata['website'].'" target="_blank">'.$profiledata['website'].'</a>' : '',
+		'occupation'    => $lang['Occupation'],
+		'occupation_v'  => stripslashes($profiledata['occupation']),
+		'interests'     => $lang['Interests'],
+		'interests_v'   => stripslashes($profiledata['interests']),
+		'signature'     => $lang['Signature'],
+		'signature_v'   => $functions->markup(stripslashes($profiledata['signature']), $functions->get_config('sig_allow_bbcode'), $functions->get_config('sig_allow_smilies')),
+		'contact_info'  => $lang['ContactInfo'],
+		'email'         => $lang['Email'],
+		'email_v'       => $functions->show_email($profiledata),
+		'msnm'          => $lang['MSNM'],
+		'msnm_v'        => stripslashes($profiledata['msnm']),
+		'yahoom'        => $lang['YahooM'],
+		'yahoom_v'      => stripslashes($profiledata['yahoom']),
+		'aim'           => $lang['AIM'],
+		'aim_v'         => stripslashes($profiledata['aim']),
+		'icq'           => $lang['ICQ'],
+		'icq_v'         => stripslashes($profiledata['icq']),
+		'icq_status'    => ( is_numeric($profiledata['icq']) ) ? '<img src="http://web.icq.com/whitepages/online?icq='.intval($profiledata['icq']).'&amp;img=25" alt="'.intval($profiledata['icq']).'" />' : '',
+		'jabber'        => $lang['Jabber'],
+		'jabber_v'      => stripslashes($profiledata['jabber'])
+	));
+
+#######################################################
+# Add the files karma.php and karma_install.php into
+# your main dir.
+#######################################################
+
+#######################################################
+# Run karma_install.php in your browser
+#######################################################	
+
+#######################################################
+# Everything should work now!
+# Thank you for installing this mod.
+# Email kidkiller@freex-tech.com if your are having 
+# Troubles.
+#######################################################			
