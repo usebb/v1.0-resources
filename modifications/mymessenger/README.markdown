@@ -3,7 +3,7 @@ mymessenger
 
 A private message system for 0.2.
 
-**Note:** this mod was made for UseBB 0.2. Today, it is not only unusable but redundant as well, leaving nothing more than a curiosity.
+**Note:** this mod was made for UseBB 0.2. It is unusable with recent versions, leaving nothing more than a curiosity.
 
 Original description:
 
