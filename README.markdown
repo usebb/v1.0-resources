@@ -19,3 +19,10 @@ Deprecated stuff
 Please be advised UseBB 1 has its age and has had several beta 0.x releases in 2004-2006. Some resources might now work anymore, while others might be untested or outdated.
 
 Since UseBB 1 will be replaced with version 2, consider building future resources for UseBB 2 instead.
+
+Other sources
+-------------
+
+This repository is not the only source of resources. People have been submitting at the [Resources forum](http://www.usebb.net/community/forum-10.html) too, and on websites such as [UseBB Zone](http://usebbzone.com/). A Google query might return helpful results.
+
+Note: the old source of the files in here were the [trackers at SourceForge.net](http://sourceforge.net/tracker/?group_id=93103). Their contents has been moved here and they are now closed down.
