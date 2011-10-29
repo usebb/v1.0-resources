@@ -1,0 +1,228 @@
+<?php
+/*
+	Copyright (C) 2003-2004 UseBB Team
+	http://www.usebb.net
+	
+	$Header: /cvsroot/usebb/UseBB/panel.php,v 1.13 2004/04/05 09:37:24 pc_freak Exp $
+	
+	This file is part of UseBB.
+	
+	UseBB is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	
+	UseBB is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with UseBB; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+$language['Home'] = "Home";
+$language['YourPanel'] = "Your Panel";
+$language['Register'] = "Register";
+$language['FAQ'] = "FAQ";
+$language['Search'] = "Search";
+$language['ActiveTopics'] = "Active Topics";
+$language['LogIn'] = "Log In";
+$language['LogOut'] = "Log Out [ %s ]";
+$language['MemberList'] = "Member List";
+$language['StaffList'] = "Staff List";
+$language['Statistics'] = "Statistics";
+$language['ContactAdmin'] = "Contact Admin";
+$language['Forum'] = "Forum";
+$language['Topics'] = "Topics";
+$language['Posts'] = "Posts";
+$language['LatestPost'] = "Latest Post";
+$language['RSSFeed'] = "RSS Feed";
+$language['NoNewPosts'] = "No new posts";
+$language['Locked'] = "Locked";
+$language['LastLogin'] = "Last login";
+$language['VariousInfo'] = "Various Information";
+$language['IndexStats'] = "This board contains %d posts in %d topics posted by %d members.";
+$language['NewestMember'] = "Welcome to our newest member: %s.";
+$language['OnlineUsers'] = "There are %d members and %d guests online in the past %d minutes.";
+$language['Username'] = "Username";
+$language['CurrentPassword'] = "Current password";
+$language['UserID'] = "User ID";
+$language['NoSuchForum'] = "The forum %s does not exist (anymore) at this board!";
+$language['WrongPassword'] = "Sorry, but that password isn\'t correct! Request a new password via the login form if you\'ve forgotten it.";
+$language['Reset'] = "Reset";
+$language['SendPassword'] = "Send a new password";
+$language['RegisterNewAccount'] = "Register a new account";
+$language['RememberMe'] = "Remember me";
+$language['Yes'] = "Yes";
+$language['No'] = "No";
+$language['NotActivated'] = "Your account %s has not been activated yet. Please check your mail box you\'ve registered with on this forum for instructions on how to activate your account.";
+$language['Error'] = "Error";
+$language['Profile'] = "Profile of %s";
+$language['Level'] = "Level";
+$language['Administrator'] = "Administrator";
+$language['Moderator'] = "Moderator";
+$language['Registered'] = "Registered";
+$language['Email'] = "E-mail address";
+$language['ContactInfo'] = "Contact Information";
+$language['Password'] = "Password";
+$language['EverythingRequired'] = "All fields are required!";
+$language['UserAlreadyExists'] = "Sorry, user %s already exists at this board. If it\'s yours, log in or request a new password. If not, please choose another username.";
+$language['RegisteredNotActivated'] = "Your account %s has now been created. An e-mail has been dispatched to %s with instructions on how to activate your account. You need to activate in order to log in with your account.";
+$language['RegisteredActivated'] = "Your account %s has now been created. An e-mail has been dispatched to %s with your login details.";
+$language['Never'] = "Never";
+$language['Member'] = "Member";
+$language['RegistrationActivationEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. You have just registered an account named [account_name], but it has not been activated yet. Please click the link below to activate your account:\r\n\r\n[activate_link]\r\n\r\nor copy-n-paste it to your browser. Then you can log in using this username and password:\r\n\r\nUsername: [account_name]\r\nPassword: [password]\r\n\r\nIf you forget your password, you can request a new one via the link on the login form. Thank you for registering!\r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]";
+$language['SendpwdActivationEmailSubject'] = "New Password";
+$language['NoForums'] = "This is an empty board. The administrator has not yet created any forums.";
+$language['AlreadyActivated'] = "Account with ID %d has already been activated.";
+$language['Activate'] = "Activate";
+$language['Activated'] = "Your account %s has now been (re)activated. You are now able to log in with the password in the e-mail you received.";
+$language['WrongActivationKey'] = "We were unable to activate your account with ID %d. The activation key is incorrect. Are you sure you didn\'t request a new password in the mean time?";
+$language['RegisterIt'] = "You can create it via the \'Register\' link.";
+$language['BoardClosed'] = "Board Closed";
+$language['SendpwdActivationEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. You have just requested a new password for account [account_name]. Please click the link below to reactivate your account:\r\n\r\n[activate_link]\r\n\r\nor copy-n-paste it to your browser. Then you can log in using this username and password:\r\n\r\nUsername: [account_name]\r\nPassword: [password]\r\n\r\nIf you forget your password, you can request a new one via the link on the login form. \r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]";
+$language['SendpwdEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. You have just requested a new password for account [account_name]. You can log in using this username and password:\r\n\r\nUsername: [account_name]\r\nPassword: [password]\r\n\r\nIf you forget your password, you can request a new one via the link on the login form. \r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]";
+$language['SendpwdEmailSubject'] = "New Password";
+$language['SendpwdActivated'] = "The new password for your account %s has been sent to %s. You are now able to login with your new password.";
+$language['SendpwdNotActivated'] = "The new password for your account %s has been sent to %s, together with information on how to reactivate your account.";
+$language['ForumIndex'] = "Forum Index";
+$language['MissingFields'] = "The following fields were missing or incorrect: %s.";
+$language['TermsOfUseContent'] = "-Put your terms and conditions in here.-";
+$language['TermsOfUse'] = "Terms Of Use";
+$language['RegistrationActivationEmailSubject'] = "Account Activation";
+$language['NeedToBeLoggedIn'] = "You need to be logged in in order to do this. Click the \'Log In\' link to log in or \'Register\' to create a new account.";
+$language['WrongEmail'] = "Sorry, but %s isn\'t the correct e-mail address for your account %s. If you can\'t remember your e-mail address, please contact the board admin.";
+$language['Topic'] = "Topic";
+$language['Author'] = "Author";
+$language['Replies'] = "Replies";
+$language['Views'] = "Views";
+$language['Note'] = "Note";
+$language['Hidden'] = "Hidden";
+$language['ACP'] = "Admin Control Panel";
+$language['SendMessage'] = "Send a message";
+$language['NoViewableForums'] = "You don\'t have permission to view any forums with this user level. If you are not logged in, do so. If you are logged in, you probably shouldn\'t be here.";
+$language['Rank'] = "Rank";
+$language['Location'] = "Location";
+$language['Website'] = "Website";
+$language['Occupation'] = "Occupation";
+$language['Interests'] = "Interests";
+$language['MSNM'] = "MSN Messenger";
+$language['YahooM'] = "Yahoo Messenger";
+$language['AIM'] = "AIM";
+$language['ICQ'] = "ICQ";
+$language['Jabber'] = "Jabber";
+$language['BannedIP'] = "Your IP address %s has been banned from this board.";
+$language['Avatar'] = "Avatar";
+$language['BannedUser'] = "Banned Account";
+$language['BannedUserExplain'] = "Your account %s has been banned from this board. The reason is:";
+$language['BannedUsername'] = "The username %s has been banned on this board. Please choose another one.";
+$language['BannedEmail'] = "The e-mail address %s has been banned on this board. Please choose another one.";
+$language['PostsPerDay'] = "Posts per day";
+$language['BoardClosedOnlyAdmins'] = "Only administrators can log in when the board is closed.";
+$language['NoPosts'] = "No Posts";
+$language['AuthorDate'] = "By %s on %s";
+$language['Re'] = "Re:";
+$language['MailForm'] = "Send an e-mail to %s";
+$language['SendEmail'] = "Send a message to %s";
+$language['NoMails'] = "This user has chosen not to receive any e-mails.";
+$language['UserEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. The user [username] has sent this message to you via our board. The message body follows.\r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]\r\n\r\n-----\r\n\r\n[body]";
+$language['EmailSent'] = "Your e-mail to %s has been sent succesfully!";
+$language['To'] = "To";
+$language['From'] = "From";
+$language['Subject'] = "Subject";
+$language['Body'] = "Body";
+$language['Send'] = "Send";
+$language['EditProfile'] = "Edit Profile";
+$language['EditOptions'] = "Edit Options";
+$language['EditPasswd'] = "Edit Password";
+$language['PanelHome'] = "Panel Home";
+$language['NewEmailNotActivated'] = "Your profile has been edited succesfully. Because you have changed your e-mail address for your account %s, you need to reactivate it. An e-mail has been sent to %s with instructions on how to do this. You will be logged out in the mean time.";
+$language['Required'] = "Required";
+$language['ViewProfile'] = "View Profile";
+$language['NewEmailActivationEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. You have just altered the e-mail address of your account [account_name], but these has not been reactivated yet. Please click the link below to reactivate your account:\r\n\r\n[activate_link]\r\n\r\nor copy-n-paste it to your browser. Then you can log in using this username and password:\r\n\r\nUsername: [account_name]\r\nPassword: [password]\r\n\r\nIf you forget your password, you can request a new one via the link on the login form.\r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]";
+$language['NewEmailActivationEmailSubject'] = "Account Reactivation";
+$language['Signature'] = "Signature";
+$language['SessionInfo'] = "Session Information";
+$language['SessionID'] = "Session ID";
+$language['IPAddress'] = "IP address";
+$language['Seconds'] = "Seconds";
+$language['Updated'] = "Updated";
+$language['Pages'] = "Pages";
+$language['AutoLogin'] = "Auto login";
+$language['Enabled'] = "Enabled";
+$language['Disabled'] = "Disabled";
+$language['Enable'] = "Enable";
+$language['Disable'] = "Disable";
+$language['AutoLoginSet'] = "The auto login cookie has now been set.";
+$language['AutoLoginUnset'] = "The auto login cookie has now been unset.";
+$language['RegistrationEmailBody'] = "Hello,\r\n\r\nThis is the forum software of [board_name] speaking. You have just registered an account named [account_name]. You can log in using this username and password:\r\n\r\nUsername: [account_name]\r\nPassword: [password]\r\n\r\nIf you forget your password, you can request a new one via the link on the login form. Thank you for registering!\r\n\r\n[board_name]\r\n[board_link]\r\n[admin_email]";
+$language['RegistrationEmailSubject'] = "Account Registration";
+$language['PublicEmail'] = "Public e-mail address";
+$language['PublicLastLogin'] = "Public last login time";
+$language['DateFormat'] = "Date format";
+$language['Again'] = "Again";
+$language['NewPassword'] = "New password";
+$language['NewPasswordAgain'] = "New password (again)";
+$language['PasswordEdited'] = "Your password has been edited succesfully.";
+$language['DetailedOnlineList'] = "Detailed online list";
+$language['OptionsEdited'] = "Your board options have been edited succesfully.";
+$language['ProfileEdited'] = "Your profile has been edited succesfully.";
+$language['Started'] = "Started";
+$language['Minutes'] = "Minutes";
+$language['Hours'] = "Hours";
+$language['Days'] = "Days";
+$language['Weeks'] = "Weeks";
+$language['TotalTime'] = "Total time";
+$language['NoTopics'] = "This forum does not contain any topics. You could post the first one!";
+$language['NotPermitted'] = "You don\'t have the appropriate permissions to do this. If in doubt, contact the administrator.";
+$language['Language'] = "Language";
+$language['Template'] = "Template";
+$language['NoSuchMember'] = "The member %s does not exist (anymore) at this board.";
+$language['FeatureDisabledBecauseCookiesDisabled'] = "This feature is disabled because this board can not set or read cookies with your browser.";
+$language['LogOutConfirm'] = "Are you sure you wish to log out? Your auto login cookie will be erased!";
+$language['Cancel'] = "Cancel";
+$language['Timezone'] = "Timezone";
+$language['DST'] = "Daylight saving times";
+$language['Sticky'] = "Sticky";
+$language['PostNewTopic'] = "Post new topic";
+$language['ForumIsLocked'] = "Forum is locked";
+$language['NoSuchTopic'] = "The topic %s does not exist (anymore) at this board.";
+$language['PostReply'] = "Post reply";
+$language['TopicIsLocked'] = "Topic is locked";
+$language['Post'] = "Post";
+$language['Edit'] = "Edit";
+$language['Delete'] = "Delete";
+$language['Quote'] = "Quote";
+$language['IPAddress'] = "IP address";
+$language['ReplyTo'] = "Reply to %s";
+$language['TopicIsLockedExplain'] = "The topic you are trying to post in is locked. Only authorized people can still post replies.";
+$language['Content'] = "Content";
+$language['Options'] = "Options";
+$language['EnableBBCode'] = "Enable BBCode.";
+$language['EnableSmilies'] = "Enable smilies.";
+$language['EnableSig'] = "Enable signature.";
+$language['EnableHTML'] = "Enable HTML.";
+$language['LockTopicAfterPost'] = "Lock topic after posting.";
+$language['Guest'] = "Guest";
+$language['BackToPrevious'] = "Back to the previous page";
+$language['NoSuchPost'] = "The post %s does not exist (anymore) at this board.";
+$language['UserPostedImage'] = "User posted image";
+$language['ForumIsLockedExplain'] = "This forum is locked. Only authorized people can post new topics.";
+$language['MakeTopicSticky'] = "Make the topic sticky.";
+$language['QuickReply'] = "Quick reply";
+$language['ReturnToTopicAfterPosting'] = "Return to the topic after posting.";
+$language['ModeratorsInThisForum'] = "This forum is moderated by: %s.";
+$language['Nobody'] = "Nobody";
+$language['DeleteTopic'] = "Delete topic";
+$language['MoveTopic'] = "Move topic";
+$language['LockTopic'] = "Lock topic";
+$language['UnlockTopic'] = "Unlock topic";
+$language['MakeSticky'] = "Make sticky";
+$language['ConfirmDeleteTopic'] = "Are you sure you want to delete the topic %s in the forum %s? This is irreversible!";
+$language['MakeNormalTopic'] = "Make normal topic";
+$language['OldForum'] = "Old forum";
+$language['NewForum'] = "New forum";
+
+?>

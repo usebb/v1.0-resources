@@ -1,0 +1,49 @@
+______________________________________
+* Add A Language v1.0b
+*
+* by Eran-s
+* ICQ: 258838506
+* Msn Messenger: eranvb@hotmail.com
+* AIM: EranTheCool
+*
+* This mod gave you the option to add a new 
+* language to your board.
+*
+* Install level: easy
+*
+______________________________________
+
+Open the file panel.php
+
+Find:
+______________________________________
+
+} elseif ( $_GET['act'] == 'sendpwd' ) {
+	
+	//
+	// Send Password
+	//
+	require(ROOT_PATH.'sources/panel_sendpwd.php');
+
+______________________________________
+
+Add after:
+______________________________________
+
+} elseif ( $_GET['act'] == 'addlang' ) {
+	
+	//
+	// Add a new languge
+	//
+	require(ROOT_PATH.'AddALang/index.php');
+
+______________________________________
+
+Save and close.
+
+-------------------------------------------------------------------
+Upload the directory AddALang to the main directory
+of the board.
+
+That's it.
+Have fun :)
