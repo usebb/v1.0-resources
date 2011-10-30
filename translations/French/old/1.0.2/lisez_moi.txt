@@ -1,0 +1,19 @@
+UseBB version 1.0.2 : French Traduction Files - v01.
+----------------------------------------------------
+
+Cette archive zip contient les 3 fichiers de traduction
+du forum open source UseBB (http://www.usebb.net) en français.
+
+Il suffit de les ajouter tels quels dans le folder /languages
+sur le serveur de votre forum UseBB 1.0.2.
+
+Traduction faite par C. Gigante (http://www.gigante.be)
+
+Cette traduction en est à sa version v01.
+Elle sera sans doute encore améliorée, si besoin est.
+N'hésitez pas à m'envoyer vos remarques et suggestions sur cette traduction
+via mon site personnel.
+
+Merci.
+
+C. GIGANTE
