@@ -53,4 +53,4 @@ jwehner AT wehnerweb.com.
 </pre>
 
 * Date: 2004-05-02
-* Author: [wehnerj](http://sourceforge.net/users/wehnerj/)
+* Author: [Jake Wehner](http://sourceforge.net/users/wehnerj/)

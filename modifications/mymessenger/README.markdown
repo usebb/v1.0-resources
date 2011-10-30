@@ -42,4 +42,4 @@ members.
 </pre>
 
 * Date: 2004-07-19
-* Author: [wehnerj](http://sourceforge.net/users/wehnerj/)
+* Author: [Jake Wehner](http://sourceforge.net/users/wehnerj/)

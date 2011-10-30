@@ -6,4 +6,4 @@ Customized Theme for UseBB, based on the default theme. BlueLine contains a tota
 **Note:** this template was made for UseBB 0.x. It is not usable on recent versions, leaving nothing more than a curiosity.
 
 * Date: 2004-12-22
-* Author: [lennilg](http://sourceforge.net/users/lennilg/)
+* Author: [DaNiCe](http://sourceforge.net/users/lennilg/)

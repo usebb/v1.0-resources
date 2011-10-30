@@ -8,4 +8,4 @@ The idea behind karma is that people can smite or applaud a user, affecting thei
 **Note:** this mod was made for UseBB 0.x. Today, it is probably unusable, leaving nothing more than a curiosity.
 
 * Date: 2004-04-18
-* Author: [kidkiller](http://sourceforge.net/users/kidkiller/)
+* Author: [Vandamme Samuel](http://sourceforge.net/users/kidkiller/)

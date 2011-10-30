@@ -30,7 +30,7 @@ members.php
 Allows editing of a members profile via the ACP. Also post count, rank, etc.
 
 * Date: 2005-10-23
-* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
+* Author: [Gaia](http://sourceforge.net/users/gaia_101/)
 
 merge_topics.php
 ----------------
@@ -45,7 +45,7 @@ moderators.php
 An ACP module that allows you to change a members status to moderator, remove moderator status from a member, and also attach a moderator to a selected forum.
 
 * Date: 2005-10-22
-* Author: [gaia_101](http://sourceforge.net/users/gaia_101/)
+* Author: [Gaia](http://sourceforge.net/users/gaia_101/)
 
 set_template.php
 ----------------

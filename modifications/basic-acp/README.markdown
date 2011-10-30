@@ -7,4 +7,4 @@ A simple control panel for managing various content types in UseBB 0.x. It was d
 
 * Original description: "This is a basic Administrative GUI for Categories, Forums, Members, and Moderators."
 * Date: 2005-10-25
-* Author: [robot-00](http://sourceforge.net/users/robot-00/)
+* Author: [LatonaDesign](http://sourceforge.net/users/robot-00/)
