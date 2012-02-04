@@ -25,4 +25,4 @@ Other sources
 
 This repository is not the only source of resources. People have been submitting at the [Resources forum](http://www.usebb.net/community/forum-10.html) too, and on websites such as [UseBB Zone](http://usebbzone.com/). A Google query might return helpful results.
 
-Note: the old source of the files in here were the [trackers at SourceForge.net](http://sourceforge.net/tracker/?group_id=93103). Their contents has been moved here.
+Note: the old source of the files in here were the trackers at SourceForge.net. Their contents has been moved here.
