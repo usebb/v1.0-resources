@@ -18,8 +18,6 @@ Deprecated stuff
 
 Please be advised UseBB 1 has its age and has had several beta 0.x releases in 2004-2006. Some resources might now work anymore, while others might be untested or outdated.
 
-Since UseBB 1 will be replaced with version 2, consider building future resources for UseBB 2 instead.
-
 Other sources
 -------------
 
